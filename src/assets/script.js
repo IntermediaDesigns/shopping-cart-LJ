@@ -10,21 +10,21 @@
 let products = [
   {
     name: "Cherry",
-    price: 4.00,
+    price: 4.0,
     quantity: 0,
     productId: 1,
     image: "images/cherry.jpg",
   },
   {
     name: "Orange",
-    price: 5.00,
+    price: 5.0,
     quantity: 0,
     productId: 2,
     image: "images/orange.jpg",
   },
   {
     name: "Strawberry",
-    price: 10.00,
+    price: 10.0,
     quantity: 0,
     productId: 3,
     image: "images/strawberry.jpg",
@@ -39,16 +39,39 @@ let cart = [];
   - addProductToCart should then increase the product's quantity
   - if the product is not already in the cart, add it to the cart
 */
+
 function addProductToCart(productId) {
   let product = products.find((product) => product.productId === productId);
-  let cartProduct = cart.find((product) => product.productId === productId);
 
+  if (!product) {
+    console.error(`Product with id ${productId} not found in products array`);
+    return;
+  }
+
+  let cartProduct = cart.find((product) => product.productId === productId);
   if (cartProduct) {
     cartProduct.quantity++;
   } else {
     cart.push({ ...product, quantity: 1 });
   }
 }
+
+function getProductIdFromElement(element) {
+  while (element) {
+    if (element.dataset.productId) {
+      return element.dataset.productId;
+    }
+    element = element.parentElement;
+  }
+  return null;
+}
+
+document.querySelector(".products").addEventListener("click", (e) => {
+  let productId = getProductIdFromElement(e.target);
+  if (productId !== null) {
+    addProductToCart(productId);
+  }
+});
 
 /* Create a function named increaseQuantity that takes in the productId as an argument
   - increaseQuantity should get the correct product based on the productId
@@ -133,11 +156,37 @@ document.querySelector(".empty-btn").addEventListener("click", (e) => {
     emptyCart();
     drawCart();
     drawCheckout();
+    clearSummary();
+    clearInput();
   }
 });
 /* End all items from cart */
 
-/* The following is for running unit tests. 
+// Clear the summary section after emptying the cart
+function clearSummary() {
+  let paymentSummary = document.querySelector(".pay-summary");
+  paymentSummary.innerHTML = "";
+}
+clearSummary();
+
+// Clear input field after payment
+function clearInput() {
+  document.querySelector(".received").value = "";
+}
+
+// clear input after .pay is clicked
+document.querySelector(".pay").addEventListener("click", (e) => {
+  e.preventDefault();
+  let productPrice = 5; // replace with actual product price
+  let cashReceived = parseFloat(document.querySelector(".received").value);
+  let cashReturned = calculateCashReturned(productPrice, cashReceived);
+  if (cashReturned !== undefined) {
+    console.log(`Cash returned: $${cashReturned}`);
+  }
+  document.querySelector(".received").value = "";
+});
+
+/* The following is for running unit tests.
    To fully complete this project, it is expected that all tests pass.
    Run the following command in terminal to run tests
    npm run test

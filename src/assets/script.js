@@ -113,6 +113,8 @@ function cartTotal() {
 function emptyCart() {
   cart = [];
   totalPaid = 0;
+  clearCheckout();
+  clearInput();
 }
 
 /* Create a function named pay that takes in an amount as an argument
@@ -125,8 +127,12 @@ let totalPaid = 0;
 
 function pay(amount) {
   totalPaid += amount;
-  let change = totalPaid - cartTotal();
-  return parseFloat(change.toFixed(2));
+  const remainingBalance = totalPaid - cartTotal();
+  if (remainingBalance >= 0) {
+    emptyCart();
+    totalPaid = 0;
+  }
+  return remainingBalance;
 }
 
 /* Place stand out suggestions here (stand out suggestions can be found at the bottom of the project rubric.)*/
@@ -138,6 +144,24 @@ function dropCart() {
   shoppingCart.append(div);
 }
 dropCart();
+
+// clear pay summary after each transaction
+function clearCheckout() {
+  let checkout = document.querySelector(".pay-summary");
+  checkout.innerHTML = "";
+}
+
+// clear input field after each transaction
+function clearInput() {
+  let input = document.querySelector(".received");
+  input.value = "";
+}
+
+// clear cartTotal after each transaction
+function clearTotal() {
+  let total = document.querySelector(".total");
+  total.innerHTML = "";
+}
 
 /* The following is for running unit tests.
    To fully complete this project, it is expected that all tests pass.

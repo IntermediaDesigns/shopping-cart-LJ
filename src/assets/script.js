@@ -40,11 +40,15 @@ let cart = [];
   - if the product is not already in the cart, add it to the cart
 */
 
+function getProductById(productId) {
+  return products.find((product) => product.productId === productId);
+}
+
 function addProductToCart(productId) {
   let product = products.find((product) => product.productId === productId);
 
   if (!product) {
-    
+    // I need this code here to prevent an undefined product to be added to the cart when clicking anywhere else on the page
     return;
   }
 
@@ -55,23 +59,6 @@ function addProductToCart(productId) {
     cart.push({ ...product, quantity: 1 });
   }
 }
-
-function getProductIdFromElement(element) {
-  while (element) {
-    if (element.dataset.productId) {
-      return element.dataset.productId;
-    }
-    element = element.parentElement;
-  }
-  return null;
-}
-
-document.querySelector(".products").addEventListener("click", (e) => {
-  let productId = getProductIdFromElement(e.target);
-  if (productId !== null) {
-    addProductToCart(productId);
-  }
-});
 
 /* Create a function named increaseQuantity that takes in the productId as an argument
   - increaseQuantity should get the correct product based on the productId
@@ -125,66 +112,32 @@ function cartTotal() {
 
 function emptyCart() {
   cart = [];
+  totalPaid = 0;
 }
 
 /* Create a function named pay that takes in an amount as an argument
   - amount is the money paid by customer
   - pay will return a negative number if there is a remaining balance
   - pay will return a positive number if money should be returned to customer
-  Hint: cartTotal function gives us cost of all the products in the cart  
+  Hint: cartTotal function gives us cost of all the products in the cart
 */
+let totalPaid = 0;
+
 function pay(amount) {
-  let change = amount - cartTotal();
+  totalPaid += amount;
+  let change = totalPaid - cartTotal();
   return parseFloat(change.toFixed(2));
 }
 
 /* Place stand out suggestions here (stand out suggestions can be found at the bottom of the project rubric.)*/
 
-/* Begin remove all items from cart */
+/* move empty button to right */
 function dropCart() {
   let shoppingCart = document.querySelector(".empty-btn");
-  shoppingCart.classList.add("button-container"); // Add this line
-  let div = document.createElement("button");
-  div.classList.add("empty");
-  div.innerHTML = `Empty Cart`;
+  shoppingCart.classList.add("button-container");
   shoppingCart.append(div);
 }
 dropCart();
-
-document.querySelector(".empty-btn").addEventListener("click", (e) => {
-  if (e.target.classList.contains("empty")) {
-    emptyCart();
-    drawCart();
-    drawCheckout();
-    clearSummary();
-    clearInput();
-  }
-});
-/* End all items from cart */
-
-// Clear the summary section after emptying the cart
-function clearSummary() {
-  let paymentSummary = document.querySelector(".pay-summary");
-  paymentSummary.innerHTML = "";
-}
-clearSummary();
-
-// Clear input field after payment
-function clearInput() {
-  document.querySelector(".received").value = "";
-}
-
-// clear input after .pay is clicked
-document.querySelector(".pay").addEventListener("click", (e) => {
-  e.preventDefault();
-  let productPrice = 5; // replace with actual product price
-  let cashReceived = parseFloat(document.querySelector(".received").value);
-  let cashReturned = calculateCashReturned(productPrice, cashReceived);
-  if (cashReturned !== undefined) {
-    
-  }
-  document.querySelector(".received").value = "";
-});
 
 /* The following is for running unit tests.
    To fully complete this project, it is expected that all tests pass.

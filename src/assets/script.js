@@ -44,7 +44,7 @@ function addProductToCart(productId) {
   let product = products.find((product) => product.productId === productId);
 
   if (!product) {
-    console.error(`Product with id ${productId} not found in products array`);
+    
     return;
   }
 
@@ -181,7 +181,7 @@ document.querySelector(".pay").addEventListener("click", (e) => {
   let cashReceived = parseFloat(document.querySelector(".received").value);
   let cashReturned = calculateCashReturned(productPrice, cashReceived);
   if (cashReturned !== undefined) {
-    console.log(`Cash returned: $${cashReturned}`);
+    
   }
   document.querySelector(".received").value = "";
 });

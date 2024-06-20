@@ -157,12 +157,6 @@ function clearInput() {
   input.value = "";
 }
 
-// clear cartTotal after each transaction
-function clearTotal() {
-  let total = document.querySelector(".total");
-  total.innerHTML = "";
-}
-
 /* The following is for running unit tests.
    To fully complete this project, it is expected that all tests pass.
    Run the following command in terminal to run tests
